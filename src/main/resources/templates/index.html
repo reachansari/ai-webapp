@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Webapp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        a {
+            color: #90caf9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        input, button, textarea {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .card {
+            background: #1e1e1e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>AI Webapp</h1>
+
+    <div class="card">
+        <h2>Upload PDF</h2>
+        <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required/>
+            <button type="submit">Upload & Index</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Available PDFs</h2>
+        <ul>
+            <li th:each="pdfFile : ${pdfFiles}">
+                <a th:href="@{'/download/' + ${pdfFile}}" th:text="${pdfFile}"></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Check Weather</h2>
+        <form th:action="@{/weather}" method="post">
+            <label for="cities">Cities (comma-separated):</label><br/>
+            <input type="text" name="cities" id="cities" style="width: 100%;" required/>
+            <button type="submit">Get Weather</button>
+        </form>
+
+        <div th:if="${weatherData}">
+            <h3>Results:</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Temperature (°C)</th>
+                    <th>Weather</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="entry : ${weatherData}">
+                    <td th:text="${entry.key}"></td>
+                    <td th:text="${entry.value.main.temp}"></td>
+                    <td th:text="${entry.value.weather[0].description}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
